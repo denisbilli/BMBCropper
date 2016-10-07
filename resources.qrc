@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>bmb-logo</file>
+        <file>bmb.png</file>
+        <file>open-folder</file>
+        <file>close</file>
+        <file>play</file>
+    </qresource>
+</RCC>
