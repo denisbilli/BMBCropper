@@ -1,0 +1,12 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\framegenerator.o
+./debug\weddingframegenerator.o
+./debug\reportageframegenerator.o
+./debug\qrc_resources.o
+./debug\moc_mainwindow.o
+./debug\moc_framegenerator.o
+./debug\moc_weddingframegenerator.o
+./debug\moc_reportageframegenerator.o
+);

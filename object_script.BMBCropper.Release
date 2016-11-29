@@ -1,0 +1,12 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\framegenerator.o
+./release\weddingframegenerator.o
+./release\reportageframegenerator.o
+./release\qrc_resources.o
+./release\moc_mainwindow.o
+./release\moc_framegenerator.o
+./release\moc_weddingframegenerator.o
+./release\moc_reportageframegenerator.o
+);

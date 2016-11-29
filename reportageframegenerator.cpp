@@ -3,6 +3,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QRgb>
 #include <QDebug>
+#include <QBitmap>
 
 #define ChannelBlend_Lighten(A,B)       ((uint8)((B > A) ? B:A))
 #define ColorBlend_Buffer(T,A,B,M)      (T)[0] = ChannelBlend_Lighten((A)[0], (B)[0]),\
@@ -23,22 +24,28 @@ ReportageFrameGenerator::ReportageFrameGenerator(QObject *parent) :
 
 QImage ReportageFrameGenerator::lightenEffect(QImage src, QImage dst, QPoint position) {
 //    int l = p.width(), r = 0, t = p.height(), b = 0;
-    QImage out(src.size(), src.format());
-    QRect dstRect(position, dst.size());
+    QImage out(dst.size(), dst.format());
+    out.fill(0);
+    //dst.createAlphaMask().save("C:\\Users\\denis\\Desktop\\Test\\out.png");
 
     qDebug() << "ReportageFrameGenerator::lightenEffect" << src.size() << out.size();
 
-    for (int y = 0; y < src.height(); ++y) {
-        QRgb *row = (QRgb*)src.scanLine(y);
+    if(src.size() == QSize(0,0)) {
+        return out;
+    }
+
+    for (int y = 0; y < dst.height(); ++y) {
+        QRgb *row = (QRgb*)src.scanLine(y + position.y());
         QRgb *dstRow = (QRgb*)out.scanLine(y);
-        for (int x = 0; x < src.width(); ++x) {
-            if(!dstRect.contains(x,y,true)) {
-                dstRow[x] = row[x];
-            } else {
-                QRgb dstPixel = dst.pixel(x - position.x(),y - position.y());
-                QRgb rgb = lightenRGB(row[x], dstPixel, qAlpha(dstPixel));
-                dstRow[x] = rgb;
+        for (int x = 0; x < dst.width(); ++x) {
+            QRgb dstPixel = dst.pixel(x, y);
+            // 0 è completamente trasparente
+            if(qAlpha(dstPixel) == 0) {
+                dstRow[x] = qRgba(0,0,0,0);
+                continue;
             }
+            QRgb rgb = lightenRGB(row[x + position.x()], dstPixel, qAlpha(dstPixel));
+            dstRow[x] = rgb;
         }
     }
 
@@ -52,15 +59,20 @@ QPixmap ReportageFrameGenerator::generateFrame(QImage image)
     int maxEdgeLength = 1950;
 
     QImage logo(":/bmb-gray.png");
-    QPixmap logoFx(logoSize, logoSize);
+    logo = logo.scaled(logoSize-10, logoSize-10, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    qDebug() << "Has alpha channel logo: " << logo.hasAlphaChannel();
+
+    QImage logoFx(logoSize, logoSize, QImage::Format_ARGB32);
+
     QPainter painterFx(&logoFx);
     painterFx.setCompositionMode (QPainter::CompositionMode_Source);
     painterFx.fillRect(logoFx.rect(), Qt::transparent);
     painterFx.setCompositionMode (QPainter::CompositionMode_SourceOver);
-    painterFx.drawImage(0, 0, logo.scaled(logoSize-10, logoSize-10, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    painterFx.drawImage(2, 2, logo);
     painterFx.end();
 
-    QImage logoFxImg = logoFx.toImage();
+    logoFx.save("D:\\Foto\\VorwerkBimby\\out.png");
 
     // Cerco e rimuovo i bordi bianchi dell'immagine e la scalo a 1950
     QRect whiteBox = getBoundsWithoutColor(image);
@@ -73,37 +85,46 @@ QPixmap ReportageFrameGenerator::generateFrame(QImage image)
     }
 
     QRect outRect = QRect(0, 0, firstPass.width() + fixedBorders*2, firstPass.height() + fixedBorders);
-    QPixmap out = QPixmap(outRect.size());
+    QImage out = QImage(outRect.size(), QImage::Format_ARGB32);
     QPainter painter(&out);
     painter.fillRect(outRect, Qt::white);
     painter.drawImage(fixedBorders, fixedBorders, firstPass);
 
-#if 0
+#if 1
     QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
     dropShadowEffect->setOffset(5);
     dropShadowEffect->setBlurRadius(5);
 
-    logoFxImg = applyEffectToImage(logoFxImg, dropShadowEffect);
+    logoFx = applyEffectToImage(logoFx, dropShadowEffect);
+    logoFx.save("D:\\Foto\\VorwerkBimby\\out1.png");
+    qDebug() << "Has alpha channel 1: " << logoFx.hasAlphaChannel();
 
-    painter.setOpacity(0.8);
-    painter.drawImage(out.width()-logoFx.width()-20, out.height()-logoFx.height()-20, logoFxImg);
+    logoFx = lightenEffect(out, logoFx, QPoint(out.width()-logoFx.width()-20, out.height()-logoFx.height()-20));
+    logoFx.save("D:\\Foto\\VorwerkBimby\\out2.png");
+    qDebug() << "Has alpha channel 2: " << logoFx.hasAlphaChannel();
+
+    painter.drawImage(out.width()-logoFx.width()-20, out.height()-logoFx.height()-20, logoFx);
     painter.end();
 
-//    QImage outLogoFxImg = lightenEffect(out.toImage(), logoFxImg, QPoint(out.width()-logoFx.width()-20, out.height()-logoFx.height()-20));
-
-//    return QPixmap::fromImage(outLogoFxImg);
-    return out;
+    return QPixmap::fromImage(out);
 #else
     painter.end();
+    qDebug() << "Has alpha channel: " << logoFx.hasAlphaChannel();
+    QImage outLogoFxImg = lightenEffect(out.toImage(), logoFx, QPoint(out.width()-logoFx.width()-20, out.height()-logoFx.height()-20));
+    outLogoFxImg.save("D:\\Foto\\VorwerkBimby\\out1.png");
 
     QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
     dropShadowEffect->setOffset(5);
     dropShadowEffect->setBlurRadius(5);
 
-    logoFxImg = applyEffectToImage(logoFxImg, dropShadowEffect);
+    QImage shadowImg = applyEffectToImage(outLogoFxImg, dropShadowEffect);
+    shadowImg.save("D:\\Foto\\VorwerkBimby\\out2.png");
 
-    QImage outLogoFxImg = lightenEffect(out.toImage(), logoFxImg, QPoint(out.width()-logoFx.width()-20, out.height()-logoFx.height()-20));
+    painter.begin(&out);
+    painter.setOpacity(0.8);
+    painter.drawImage(out.width()-outLogoFxImg.width()-20, out.height()-outLogoFxImg.height()-20, outLogoFxImg);
+    painter.end();
 
-    return QPixmap::fromImage(outLogoFxImg);
+    return out;
 #endif
 }

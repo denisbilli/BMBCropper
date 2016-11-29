@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     container = NULL;
     model = NULL;
+    borderStyle = WEDDING;
+    ui->radioButton->setChecked(true);
 }
 
 MainWindow::~MainWindow()
@@ -100,7 +102,12 @@ void MainWindow::refreshPreview(const QModelIndex &index)
 
     QImage image(container->absolutePath() + "/" + index.data().toString());
     QPixmap out = generateFrame(image);
-    ui->lblPreview->setPixmap(out.scaledToHeight(ui->lblPreview->height(), Qt::SmoothTransformation));
+    bool isLandscape = (out.width() > out.height());
+    if(isLandscape) {
+        ui->lblPreview->setPixmap(out.scaledToWidth(ui->lblPreview->width(), Qt::SmoothTransformation));
+    } else {
+        ui->lblPreview->setPixmap(out.scaledToHeight(ui->lblPreview->height(), Qt::SmoothTransformation));
+    }
 }
 
 void MainWindow::on_listView_clicked(const QModelIndex &index)
