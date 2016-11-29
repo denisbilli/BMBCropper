@@ -13,9 +13,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    framegenerator.cpp \
+    weddingframegenerator.cpp \
+    reportageframegenerator.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    framegenerator.h \
+    weddingframegenerator.h \
+    reportageframegenerator.h
 
 FORMS    += mainwindow.ui
 

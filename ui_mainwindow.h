@@ -1,7 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.0
+** Created: Tue Nov 29 15:40:27 2016
+**      by: Qt User Interface Compiler version 4.7.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,23 +11,25 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QProgressBar>
-#include <QtWidgets/QSlider>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QListView>
+#include <QtGui/QMainWindow>
+#include <QtGui/QMenuBar>
+#include <QtGui/QProgressBar>
+#include <QtGui/QRadioButton>
+#include <QtGui/QSlider>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QStatusBar>
+#include <QtGui/QToolBar>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -45,9 +48,15 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QListView *listView;
     QVBoxLayout *verticalLayout_2;
+    QGroupBox *groupBox;
+    QVBoxLayout *verticalLayout_4;
+    QVBoxLayout *verticalLayout_3;
+    QRadioButton *radioButton;
+    QRadioButton *radioButton_2;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_3;
     QSlider *frameSize;
+    QSpacerItem *horizontalSpacer_2;
     QLabel *lblPreview;
     QProgressBar *progressBar;
     QMenuBar *menuBar;
@@ -57,34 +66,34 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(961, 549);
+            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+        MainWindow->resize(866, 578);
         actionApri = new QAction(MainWindow);
-        actionApri->setObjectName(QStringLiteral("actionApri"));
+        actionApri->setObjectName(QString::fromUtf8("actionApri"));
         QIcon icon;
-        icon.addFile(QStringLiteral(":/open-folder"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/open-folder"), QSize(), QIcon::Normal, QIcon::Off);
         actionApri->setIcon(icon);
         actionGenera_Cornici = new QAction(MainWindow);
-        actionGenera_Cornici->setObjectName(QStringLiteral("actionGenera_Cornici"));
+        actionGenera_Cornici->setObjectName(QString::fromUtf8("actionGenera_Cornici"));
         QIcon icon1;
-        icon1.addFile(QStringLiteral(":/play"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/play"), QSize(), QIcon::Normal, QIcon::Off);
         actionGenera_Cornici->setIcon(icon1);
         centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout = new QVBoxLayout(centralWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setObjectName(QString::fromUtf8("label_2"));
 
         horizontalLayout->addWidget(label_2);
 
         txtOriginalDir = new QLineEdit(centralWidget);
-        txtOriginalDir->setObjectName(QStringLiteral("txtOriginalDir"));
+        txtOriginalDir->setObjectName(QString::fromUtf8("txtOriginalDir"));
         txtOriginalDir->setMinimumSize(QSize(400, 0));
         txtOriginalDir->setReadOnly(true);
 
@@ -95,7 +104,7 @@ public:
         horizontalLayout->addItem(horizontalSpacer);
 
         label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
+        label->setObjectName(QString::fromUtf8("label"));
         label->setPixmap(QPixmap(QString::fromUtf8(":/bmb.png")));
 
         horizontalLayout->addWidget(label);
@@ -105,9 +114,10 @@ public:
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         listView = new QListView(centralWidget);
-        listView->setObjectName(QStringLiteral("listView"));
+        listView->setObjectName(QString::fromUtf8("listView"));
+        listView->setMinimumSize(QSize(450, 0));
         listView->setViewMode(QListView::ListMode);
         listView->setUniformItemSizes(true);
 
@@ -115,19 +125,42 @@ public:
 
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         verticalLayout_2->setSizeConstraint(QLayout::SetFixedSize);
+        groupBox = new QGroupBox(centralWidget);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setMinimumSize(QSize(200, 0));
+        verticalLayout_4 = new QVBoxLayout(groupBox);
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        radioButton = new QRadioButton(groupBox);
+        radioButton->setObjectName(QString::fromUtf8("radioButton"));
+        radioButton->setChecked(true);
+
+        verticalLayout_3->addWidget(radioButton);
+
+        radioButton_2 = new QRadioButton(groupBox);
+        radioButton_2->setObjectName(QString::fromUtf8("radioButton_2"));
+        radioButton_2->setChecked(false);
+
+        verticalLayout_3->addWidget(radioButton_2);
+
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        label_3 = new QLabel(centralWidget);
-        label_3->setObjectName(QStringLiteral("label_3"));
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        label_3 = new QLabel(groupBox);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setMaximumSize(QSize(120, 16777215));
 
         horizontalLayout_3->addWidget(label_3);
 
-        frameSize = new QSlider(centralWidget);
-        frameSize->setObjectName(QStringLiteral("frameSize"));
+        frameSize = new QSlider(groupBox);
+        frameSize->setObjectName(QString::fromUtf8("frameSize"));
+        frameSize->setMinimumSize(QSize(280, 0));
         frameSize->setMaximumSize(QSize(280, 16777215));
         frameSize->setMaximum(40);
         frameSize->setValue(16);
@@ -135,11 +168,21 @@ public:
 
         horizontalLayout_3->addWidget(frameSize);
 
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        verticalLayout_2->addLayout(horizontalLayout_3);
+        horizontalLayout_3->addItem(horizontalSpacer_2);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_3);
+
+
+        verticalLayout_4->addLayout(verticalLayout_3);
+
+
+        verticalLayout_2->addWidget(groupBox);
 
         lblPreview = new QLabel(centralWidget);
-        lblPreview->setObjectName(QStringLiteral("lblPreview"));
+        lblPreview->setObjectName(QString::fromUtf8("lblPreview"));
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -152,7 +195,7 @@ public:
         verticalLayout_2->addWidget(lblPreview);
 
         progressBar = new QProgressBar(centralWidget);
-        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
         QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
@@ -174,14 +217,14 @@ public:
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 961, 26));
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 866, 20));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QStringLiteral("statusBar"));
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
         mainToolBar->addAction(actionApri);
@@ -195,13 +238,16 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "BMB Framer", 0));
-        actionApri->setText(QApplication::translate("MainWindow", "Apri", 0));
-        actionGenera_Cornici->setText(QApplication::translate("MainWindow", "Genera Cornici", 0));
-        label_2->setText(QApplication::translate("MainWindow", "Cartella degli originali:", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "BMB Framer", 0, QApplication::UnicodeUTF8));
+        actionApri->setText(QApplication::translate("MainWindow", "Apri", 0, QApplication::UnicodeUTF8));
+        actionGenera_Cornici->setText(QApplication::translate("MainWindow", "Genera Cornici", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "Cartella degli originali:", 0, QApplication::UnicodeUTF8));
         label->setText(QString());
-        label_3->setText(QApplication::translate("MainWindow", "Dimensione cornice:", 0));
-        lblPreview->setText(QApplication::translate("MainWindow", "Anteprima", 0));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Opzioni", 0, QApplication::UnicodeUTF8));
+        radioButton->setText(QApplication::translate("MainWindow", "Matrimonio", 0, QApplication::UnicodeUTF8));
+        radioButton_2->setText(QApplication::translate("MainWindow", "Reportage", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "Dimensione bordo:", 0, QApplication::UnicodeUTF8));
+        lblPreview->setText(QApplication::translate("MainWindow", "Anteprima", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

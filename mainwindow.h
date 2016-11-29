@@ -17,12 +17,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QRect crop(QImage p);
-    QRect crop1(QImage p);
-    QRect getBoundsWithoutColor(QImage p, const QColor &exclusionColor = Qt::white, const int tolerance=30);
-    QPixmap generateFrame(QImage image);
+    typedef enum BorderStyle {
+        WEDDING = 0,
+        REPORTAGE
+    } BorderStyle;
 
     void refreshPreview(const QModelIndex &index);
+    QPixmap generateFrame(QImage image);
 private slots:
     void on_actionApri_triggered();
     void on_actionGenera_Cornici_triggered();
@@ -35,11 +36,16 @@ private slots:
 
     void on_frameSize_valueChanged(int value);
 
+    void on_radioButton_clicked();
+
+    void on_radioButton_2_clicked();
+
 private:
     Ui::MainWindow *ui;
     QFileInfoList filesList;
     QDir* container;
     QFileSystemModel *model;
+    BorderStyle borderStyle;
 };
 
 #endif // MAINWINDOW_H
