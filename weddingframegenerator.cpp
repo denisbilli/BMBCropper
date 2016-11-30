@@ -1,15 +1,28 @@
 #include "weddingframegenerator.h"
 
+#include <QDebug>
+
 WeddingFrameGenerator::WeddingFrameGenerator(QObject *parent) :
     FrameGenerator(parent)
 {
+    FrameOption* borderSizeOpt = new FrameOption("borderSize", 16, FrameOption::Int, this);
+    borderSizeOpt->setMin(0);
+    borderSizeOpt->setMax(50);
+
+    FrameOption* logoSizeOpt = new FrameOption("logoSize", 165, FrameOption::Int, this);
+    logoSizeOpt->setMin(100);
+    logoSizeOpt->setMax(300);
+
+    addOption("borderSize", borderSizeOpt);
+    addOption("logoSize", logoSizeOpt);
 }
 
 QPixmap WeddingFrameGenerator::generateFrame(QImage image)
 {
-    int fixedBorders = m_borderSize;
-    int logoSize = 165;
-    int maxEdgeLength = 1950;
+    int fixedBorders = getOption("borderSize").toInt();
+    qDebug() << "WeddingFrameGenerator::generateFrame" << fixedBorders;
+    int logoSize = getOption("logoSize").toInt();
+    int maxEdgeLength = getOption("pictureSizeW").toInt();
 
     // Cerco e rimuovo i bordi bianchi dell'immagine e la scalo a 1950
     QRect whiteBox = getBoundsWithoutColor(image);

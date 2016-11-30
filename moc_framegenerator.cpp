@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'framegenerator.h'
 **
-** Created: Tue Nov 29 18:13:22 2016
+** Created: Wed Nov 30 18:06:31 2016
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,18 +23,26 @@ static const uint qt_meta_data_FrameGenerator[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       0,       // signalCount
+       1,       // signalCount
+
+ // signals: signature, parameters, type, tag, flags
+      39,   16,   15,   15, 0x05,
+
+ // slots: signature, parameters, type, tag, flags
+      71,   15,   15,   15, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_FrameGenerator[] = {
-    "FrameGenerator\0"
+    "FrameGenerator\0\0optionName,optionValue\0"
+    "optionChanged(QString,QVariant)\0"
+    "slot_onOptionChanged()\0"
 };
 
 const QMetaObject FrameGenerator::staticMetaObject = {
@@ -64,6 +72,21 @@ int FrameGenerator::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QObject::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: optionChanged((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QVariant(*)>(_a[2]))); break;
+        case 1: slot_onOptionChanged(); break;
+        default: ;
+        }
+        _id -= 2;
+    }
     return _id;
+}
+
+// SIGNAL 0
+void FrameGenerator::optionChanged(QString _t1, QVariant _t2)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE

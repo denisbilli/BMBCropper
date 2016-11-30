@@ -16,12 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     framegenerator.cpp \
     weddingframegenerator.cpp \
-    reportageframegenerator.cpp
+    reportageframegenerator.cpp \
+    frameoption.cpp \
+    abstractoption.cpp
 
 HEADERS  += mainwindow.h \
     framegenerator.h \
     weddingframegenerator.h \
-    reportageframegenerator.h
+    reportageframegenerator.h \
+    frameoption.h \
+    abstractoption.h
 
 FORMS    += mainwindow.ui
 

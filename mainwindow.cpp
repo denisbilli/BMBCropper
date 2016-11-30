@@ -18,8 +18,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     container = NULL;
     model = NULL;
+    frameGenerator = NULL;
+    firstStart = true;
+
     borderStyle = WEDDING;
     ui->radioButton->setChecked(true);
+
+    timer = new QTimer(this);
+    timer->setInterval(300);
+    timer->setSingleShot(true);
+    connect(timer, SIGNAL(timeout()), SLOT(slot_onTimer()));
+
+    on_radioButton_clicked();
+    firstStart = false;
 }
 
 MainWindow::~MainWindow()
@@ -53,15 +64,48 @@ void MainWindow::on_actionApri_triggered()
     qDebug() << model->rootPath();
 }
 
-QPixmap MainWindow::generateFrame(QImage image) {
-    FrameGenerator* frameGenerator;
-    if(borderStyle == WEDDING) {
-        frameGenerator = new WeddingFrameGenerator(this);
-    } else if (borderStyle == REPORTAGE) {
-        frameGenerator = new ReportageFrameGenerator(this);
-    }
-    frameGenerator->setBorderSize(ui->frameSize->value());
+void MainWindow::refreshOptionsFrame(FrameGenerator* frameGenerator)
+{
+    QWidgetList list = ui->groupBox_2->findChildren<QWidget*>();
+    foreach (QWidget * w, list) w->deleteLater();
 
+    for (int i = 0; i < ui->groupBox_2->layout()->count(); ++i) {
+        QLayoutItem *layoutItem = ui->groupBox_2->layout()->itemAt(i);
+        if (layoutItem->spacerItem()) {
+            ui->groupBox_2->layout()->removeItem(layoutItem);
+            // You could also use: layout->takeAt(i);
+            delete layoutItem;
+            --i;
+        }
+    }
+
+    foreach (QString optionName, frameGenerator->options().keys()) {
+        FrameOption* option = frameGenerator->options().value(optionName).value<FrameOption*>();
+
+        QWidget* container = new QWidget(ui->groupBox_2);
+        QHBoxLayout* layout = new QHBoxLayout(container);
+
+        QLabel* label = new QLabel(container);
+        label->setText(QString("<b>%1</b>").arg(option->name()));
+
+        layout->addWidget(label);
+        if(option->widget() != NULL) {
+            option->widget()->setParent(container);
+            layout->addWidget(option->widget());
+        }
+
+        ui->groupBox_2->layout()->addWidget(container);
+    }
+
+    QSpacerItem* spacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    ui->groupBox_2->layout()->addItem(spacer);
+}
+
+QPixmap MainWindow::generateFrame(QImage image) {
+    qDebug() << "MainWindow::generateFrame";
+    if(frameGenerator == NULL) {
+        return QPixmap();
+    }
     return frameGenerator->generateFrame(image);
 }
 
@@ -77,10 +121,10 @@ void MainWindow::on_actionGenera_Cornici_triggered()
 
     ui->progressBar->setValue(0);
     ui->progressBar->setMaximum(filesList.count());
-    int count = 0;
     foreach (QFileInfo file, filesList) {
         ui->statusBar->showMessage("Generazione cornice per \"" + file.fileName() + "\"");
         QImage image(file.absoluteFilePath());
+        qDebug() << "genera";
         QPixmap out = generateFrame(image);
         //QString("export_%1").arg(count++, 3, 10, QChar('0'))
         out.save(container->absolutePath() + "/Export/" + file.baseName().replace(" ","_" ).toLower().simplified() + ".jpg");
@@ -93,7 +137,7 @@ void MainWindow::on_actionGenera_Cornici_triggered()
     ui->statusBar->showMessage("Generazione completata");
 }
 
-void MainWindow::refreshPreview(const QModelIndex &index)
+void MainWindow::refreshPreview(const QModelIndex &index, bool fullRes)
 {
     if(container == NULL) {
         QMessageBox::warning(this, "Attenzione!", "Nessuna cartella selezionata. Impossibile generare le cornici!");
@@ -101,43 +145,103 @@ void MainWindow::refreshPreview(const QModelIndex &index)
     }
 
     QImage image(container->absolutePath() + "/" + index.data().toString());
-    QPixmap out = generateFrame(image);
-    bool isLandscape = (out.width() > out.height());
+    bool isLandscape = (image.width() > image.height());
+
     if(isLandscape) {
-        ui->lblPreview->setPixmap(out.scaledToWidth(ui->lblPreview->width(), Qt::SmoothTransformation));
+        qDebug() << "landscape";
+        QPixmap out = generateFrame(fullRes ? image : image.scaledToWidth(ui->lblPreview->width(), Qt::FastTransformation));
+        ui->lblPreview->setPixmap(out.scaledToWidth(ui->lblPreview->width(), fullRes ? Qt::SmoothTransformation : Qt::FastTransformation));
     } else {
-        ui->lblPreview->setPixmap(out.scaledToHeight(ui->lblPreview->height(), Qt::SmoothTransformation));
+        qDebug() << "portrait";
+        QPixmap out = generateFrame(fullRes ? image : image.scaledToHeight(ui->lblPreview->height(), Qt::FastTransformation));
+        ui->lblPreview->setPixmap(out.scaledToHeight(ui->lblPreview->height(), fullRes ? Qt::SmoothTransformation : Qt::FastTransformation));
     }
 }
 
 void MainWindow::on_listView_clicked(const QModelIndex &index)
 {
+    if(timer->isActive()) {
+        return;
+    }
+    qDebug() << "MainWindow::on_listView_clicked";
     refreshPreview(index);
+    timer->start();
 }
 
 void MainWindow::on_listView_pressed(const QModelIndex &index)
 {
+    if(timer->isActive()) {
+        return;
+    }
+    qDebug() << "MainWindow::on_listView_pressed";
     refreshPreview(index);
+    timer->start();
 }
 
 void MainWindow::on_listView_activated(const QModelIndex &index)
 {
+    if(timer->isActive()) {
+        return;
+    }
+    qDebug() << "MainWindow::on_listView_activated";
     refreshPreview(index);
-}
-
-void MainWindow::on_frameSize_valueChanged(int value)
-{
-    refreshPreview(ui->listView->currentIndex());
+    timer->start();
 }
 
 void MainWindow::on_radioButton_clicked()
 {
+    if(timer->isActive()) {
+        return;
+    }
+    qDebug() << "MainWindow::on_radioButton_clicked";
     borderStyle = WEDDING;
-    refreshPreview(ui->listView->currentIndex());
+
+    if(frameGenerator != NULL) {
+        disconnect(frameGenerator, 0, 0, 0);
+        frameGenerator->deleteLater();
+    }
+
+    frameGenerator = new WeddingFrameGenerator(this);
+    connect(frameGenerator, SIGNAL(optionChanged(QString,QVariant)), SLOT(slot_onOptionChanged(QString,QVariant)));
+    refreshOptionsFrame(frameGenerator);
+
+    if(!firstStart) {
+        refreshPreview(ui->listView->currentIndex());
+        timer->start();
+    }
 }
 
 void MainWindow::on_radioButton_2_clicked()
 {
+    if(timer->isActive()) {
+        return;
+    }
+    qDebug() << "MainWindow::on_radioButton_2_clicked";
     borderStyle = REPORTAGE;
+
+    if(frameGenerator != NULL) {
+        disconnect(frameGenerator, 0, 0, 0);
+        frameGenerator->deleteLater();
+    }
+
+    frameGenerator = new ReportageFrameGenerator(this);
+    connect(frameGenerator, SIGNAL(optionChanged(QString,QVariant)), SLOT(slot_onOptionChanged(QString,QVariant)));
+    refreshOptionsFrame(frameGenerator);
+
     refreshPreview(ui->listView->currentIndex());
+    timer->start();
 }
+
+void MainWindow::slot_onTimer()
+{
+    qDebug() << "MainWindow::slot_onTimer";
+    refreshPreview(ui->listView->currentIndex(), true);
+}
+
+void MainWindow::slot_onOptionChanged(QString optionName, QVariant optionValue)
+{
+    qDebug() << "MainWindow::slot_onOptionChanged" << optionName << optionValue;
+    refreshPreview(ui->listView->currentIndex());
+    timer->start();
+}
+

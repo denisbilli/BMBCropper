@@ -1,9 +1,15 @@
 #include "framegenerator.h"
 
+#include <QDebug>
+
 FrameGenerator::FrameGenerator(QObject *parent) :
     QObject(parent)
 {
-    m_borderSize = 0;
+    FrameOption* pictureSizeWOpt = new FrameOption("pictureSizeW", 1950, FrameOption::Int, this);
+    pictureSizeWOpt->setMin(400);
+    pictureSizeWOpt->setMax(9999);
+
+    addOption("pictureSizeW", pictureSizeWOpt);
 }
 
 QRect FrameGenerator::crop(QImage p) {
@@ -45,6 +51,26 @@ QImage FrameGenerator::applyEffectToImage(QImage src, QGraphicsEffect *effect, i
     return res;
 }
 
+void FrameGenerator::addOption(QString optionName, FrameOption *option) {
+    m_optionsMap.insert(optionName, QVariant::fromValue<FrameOption*>(option));
+    connect(option, SIGNAL(optionChanged()), SLOT(slot_onOptionChanged()));
+}
+
+QVariant FrameGenerator::getOption(QString optionName) {
+    qDebug() << "FrameGenerator::getOption" << optionName << m_optionsMap.value(optionName).value<FrameOption*>()
+                << m_optionsMap.value(optionName).value<FrameOption*>()->value();
+    return m_optionsMap.value(optionName).value<FrameOption*>()->value();
+}
+
+void FrameGenerator::slot_onOptionChanged()
+{
+    FrameOption* option = qobject_cast<FrameOption*>(QObject::sender());
+    if(option == NULL) {
+        return;
+    }
+    emit optionChanged(option->name(), option->value());
+}
+
 QRect FrameGenerator::getBoundsWithoutColor(QImage p, const QColor &exclusionColor, const int tolerance)
 {
     QRect rect;
@@ -74,9 +100,4 @@ QRect FrameGenerator::getBoundsWithoutColor(QImage p, const QColor &exclusionCol
     }
 
     return rect;
-}
-
-void FrameGenerator::setBorderSize(int borderSize)
-{
-    this->m_borderSize = borderSize;
 }

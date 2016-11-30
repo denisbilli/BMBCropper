@@ -11,6 +11,10 @@
 #include <QGraphicsEffect>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include "frameoption.h"
+
+#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
+#define CHECK_BITMASK(var,mask) ((var & mask) == mask)
 
 #define SMALL 10
 #define isSimilar(A, B) ( ((A-B) < SMALL) && ((A-B) > - SMALL) )
@@ -28,18 +32,22 @@ public:
     virtual QPixmap generateFrame(QImage image) = 0;
     QRect crop(QImage p);
     QRect getBoundsWithoutColor(QImage p, const QColor &exclusionColor = Qt::white, const int tolerance=30);
-
-    void setBorderSize(int borderSize);
-    int borderSize() { return m_borderSize; }
-
     QImage applyEffectToImage(QImage src, QGraphicsEffect *effect, int extent = 0);
+
+    void addOption(QString optionName, FrameOption* option);
+    QVariant getOption(QString optionName);
+    QVariantMap options() { return m_optionsMap; }
+
 protected:
-    int m_borderSize;
+    QVariantMap m_optionsMap;
 
 signals:
+    void optionChanged(QString optionName, QVariant optionValue);
 
 public slots:
 
+private slots:
+    void slot_onOptionChanged();
 };
 
 #endif // FRAMEGENERATOR_H

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'reportageframegenerator.h'
 **
-** Created: Tue Nov 29 18:13:23 2016
+** Created: Wed Nov 30 18:11:43 2016
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -29,6 +29,10 @@ static const uint qt_meta_data_ReportageFrameGenerator[] = {
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
+
+ // enums: name, flags, count, data
+
+ // enum data: key, value
 
        0        // eod
 };

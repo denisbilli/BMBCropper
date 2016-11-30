@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Tue Nov 29 15:45:08 2016
+** Created: Wed Nov 30 18:06:31 2016
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -36,9 +36,10 @@ static const uint qt_meta_data_MainWindow[] = {
       80,   74,   11,   11, 0x08,
      113,   74,   11,   11, 0x08,
      146,   74,   11,   11, 0x08,
-     187,  181,   11,   11, 0x08,
-     218,   11,   11,   11, 0x08,
-     243,   11,   11,   11, 0x08,
+     181,   11,   11,   11, 0x08,
+     206,   11,   11,   11, 0x08,
+     233,   11,   11,   11, 0x08,
+     271,  248,   11,   11, 0x08,
 
        0        // eod
 };
@@ -49,9 +50,10 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "index\0on_listView_clicked(QModelIndex)\0"
     "on_listView_pressed(QModelIndex)\0"
     "on_listView_activated(QModelIndex)\0"
-    "value\0on_frameSize_valueChanged(int)\0"
     "on_radioButton_clicked()\0"
-    "on_radioButton_2_clicked()\0"
+    "on_radioButton_2_clicked()\0slot_onTimer()\0"
+    "optionName,optionValue\0"
+    "slot_onOptionChanged(QString,QVariant)\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -88,12 +90,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 2: on_listView_clicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
         case 3: on_listView_pressed((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
         case 4: on_listView_activated((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
-        case 5: on_frameSize_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 6: on_radioButton_clicked(); break;
-        case 7: on_radioButton_2_clicked(); break;
+        case 5: on_radioButton_clicked(); break;
+        case 6: on_radioButton_2_clicked(); break;
+        case 7: slot_onTimer(); break;
+        case 8: slot_onOptionChanged((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QVariant(*)>(_a[2]))); break;
         default: ;
         }
-        _id -= 8;
+        _id -= 9;
     }
     return _id;
 }
